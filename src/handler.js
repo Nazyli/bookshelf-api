@@ -65,4 +65,14 @@ const updateBook = (request, h) => {
   return apiResponse(h, 200, 'success', 'Buku berhasil diperbarui', null);
 };
 
-module.exports = {getBooks, getBookById, addBook, updateBook};
+const deleteBook = (request, h) => {
+  const {id} = request.params;
+  const index = books.findIndex((book) => book.id === id);
+  if (index < 0) {
+    return apiResponse(h, 404, 'fail', 'Buku gagal dihapus. Id tidak ditemukan', null);
+  }
+  books.splice(index, 1);
+  return apiResponse(h, 200, 'success', 'Buku berhasil dihapus', null);
+};
+
+module.exports = {getBooks, getBookById, addBook, updateBook, deleteBook};
