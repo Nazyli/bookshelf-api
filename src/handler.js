@@ -1,15 +1,24 @@
 const {nanoid} = require('nanoid');
 const books = require('./books');
-const apiResponse = require('./helper');
+const {apiResponse, bookDto} = require('./helper');
 
 const getBooks = (request, h) => {
-  // let data = books;
-  return h.response({
-    status: 'success',
-    data: {
-      'books': books,
-    },
-  });
+  const {name, reading, finished} = request.query;
+  let listData;
+  if (reading === '1') {
+    listData = books.filter((i) => i.reading === '1').map((j) => bookDto(j));
+  } else if (reading === '0') {
+    listData = books.filter((i) => i.reading !== '1').map((j) => bookDto(j));
+  } else if (finished === '0') {
+    listData = books.filter((i) => i.finished === false).map((j) => bookDto(j));
+  } else if (finished === '1') {
+    listData = books.filter((i) => i.finished === '1').map((j) => bookDto(j));
+  } else if (name) {
+    listData = books.filter((i) => i.name.toLowerCase().includes(name.toLowerCase())).map((j) => bookDto(j));
+  } else if (name === undefined) {
+    listData = books.map((i) => bookDto(i));
+  }
+  return apiResponse(h, 200, 'success', null, {books: listData});
 };
 
 

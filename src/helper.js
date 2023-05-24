@@ -8,4 +8,12 @@ const apiResponse = (h, code, status, message, data) => {
   return response;
 };
 
-module.exports = apiResponse;
+const bookDto = (book) =>{
+  return {
+    'id': book.id,
+    'name': book.name,
+    'publisher': book.publisher,
+  };
+};
+
+module.exports = {apiResponse, bookDto};
