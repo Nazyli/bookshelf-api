@@ -5,14 +5,10 @@ const {apiResponse, bookDto} = require('./helper');
 const getBooks = (request, h) => {
   const {name, reading, finished} = request.query;
   let listData;
-  if (reading === '1') {
-    listData = books.filter((i) => i.reading === '1').map((j) => bookDto(j));
-  } else if (reading === '0') {
-    listData = books.filter((i) => i.reading !== '1').map((j) => bookDto(j));
-  } else if (finished === '0') {
-    listData = books.filter((i) => i.finished === false).map((j) => bookDto(j));
-  } else if (finished === '1') {
-    listData = books.filter((i) => i.finished === '1').map((j) => bookDto(j));
+  if (reading === '1' || reading === '0') {
+    listData = books.filter((i) => i.reading === (reading === '1')).map((j) => bookDto(j));
+  } else if (finished === '1' || finished === '0') {
+    listData = books.filter((i) => i.finished === (finished === '1')).map((j) => bookDto(j));
   } else if (name) {
     listData = books.filter((i) => i.name.toLowerCase().includes(name.toLowerCase())).map((j) => bookDto(j));
   } else if (name === undefined) {
