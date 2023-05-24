@@ -20,6 +20,14 @@ const getBooks = (request, h) => {
   }
   return apiResponse(h, 200, 'success', null, {books: listData});
 };
+const getBookById = (request, h) => {
+  const {id} = request.params;
+  const book = books.filter((i) => i.id === id)[0];
+  if (book === undefined) {
+    return apiResponse(h, 404, 'fail', 'Buku tidak ditemukan', null);
+  }
+  return apiResponse(h, 200, 'success', null, {book});
+};
 
 
 const addBook = (request, h) => {
@@ -39,4 +47,22 @@ const addBook = (request, h) => {
   }
 };
 
-module.exports = {getBooks, addBook};
+const updateBook = (request, h) => {
+  const {id} = request.params;
+  const updatedAt = new Date().toISOString();
+  const index = books.findIndex((i) => i.id === id);
+  const {name, year, author, summary, publisher, pageCount, readPage, reading} = request.payload;
+  if (index < 0) {
+    return apiResponse(h, 404, 'fail', 'Gagal memperbarui buku. Id tidak ditemukan', null);
+  }
+  if ((name === undefined) || (name === '') || !name) {
+    return apiResponse(h, 400, 'fail', 'Gagal memperbarui buku. Mohon isi nama buku', null);
+  }
+  if (readPage > pageCount) {
+    return apiResponse(h, 400, 'fail', 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount', null);
+  }
+  books[index] = {...books[index], name, year, author, summary, publisher, pageCount, readPage, reading, updatedAt};
+  return apiResponse(h, 200, 'success', 'Buku berhasil diperbarui', null);
+};
+
+module.exports = {getBooks, getBookById, addBook, updateBook};
